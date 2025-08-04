@@ -1,53 +1,58 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
-const dotenv = require('dotenv')
-dotenv.config()
-
+const dotenv = require('dotenv');
+dotenv.config();
 const { MongoClient } = require('mongodb');
-// or as an es module:
-// import { MongoClient } from 'mongodb'
 
-// Connection URL
-const url = 'mongodb://localhost:27017/PassMA';
+// Use MongoDB Atlas connection string from .env
+const url = process.env.MONGO_URI;
 const client = new MongoClient(url);
 
-// Database Name
+// Name of your MongoDB database
 const dbName = 'PassMA';
-const port = 3000
+const port = 3000;
+
+// Middleware
 app.use(bodyParser.json());
 app.use(cors());
 
-client.connect();
+// Connect once, reuse the connection
+client.connect().then(() => {
+  console.log("✅ Connected to MongoDB Atlas");
 
-// get all password
-app.get('/', async (req, res) => {
+  // Get all passwords
+  app.get('/', async (req, res) => {
     const db = client.db(dbName);
     const collection = db.collection('Password');
     const findResult = await collection.find({}).toArray();
-    res.json(findResult)
-})
+    res.json(findResult);
+  });
 
-// save password
-app.post('/', async (req, res) => {
-    const password = req.body
+  // Save password
+  app.post('/', async (req, res) => {
+    const password = req.body;
     const db = client.db(dbName);
     const collection = db.collection('Password');
-    const findResult = await collection.insertOne(password);
-    res.send({ success: true,result:findResult })
-})
+    const result = await collection.insertOne(password);
+    res.send({ success: true, result });
+  });
 
-// delete password by id
-app.delete('/', async (req, res) => {
-    const password = req.body
+  // Delete password
+  app.delete('/', async (req, res) => {
+    const password = req.body;
     const db = client.db(dbName);
     const collection = db.collection('Password');
-    const findResult = await collection.deleteOne(password);
-    res.send({ success: true,result:findResult })
-})
+    const result = await collection.deleteOne(password);
+    res.send({ success: true, result });
+  });
 
-app.listen(port, () => {
-    console.log(`Example app listening on port http://localhost:${port}`)
-})
+  // Start server
+  app.listen(port, () => {
+    console.log(`🚀 Server is running at http://localhost:${port}`);
+  });
+
+}).catch((err) => {
+  console.error("❌ MongoDB connection failed:", err);
+});
