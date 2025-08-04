@@ -1,7 +1,8 @@
 import './index.css'
-import Navbar from './component/navbar'
-import Manager from './component/manager'
-import Footer from './component/footer'
+import Navbar from './components/Navbar';
+import Manager from './components/Manager';
+import Footer from './components/Footer';
+
 
 function App() {
  
@@ -15,4 +16,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
