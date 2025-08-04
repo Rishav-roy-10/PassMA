@@ -14,19 +14,16 @@ const Table = ({ passwordArray, setPasswordArray, setForm }) => {
     if (c) {
       const updatedArray = passwordArray.filter((item) => item.id !== id);
       setPasswordArray(updatedArray);
-      -   await fetch('http://localhost:3000/', {
+      await fetch('https://password-manager-2793.onrender.com/', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id })
       });
-
-      // localStorage.setItem('passwordArray', JSON.stringify(updatedArray));
     }
   };
 
   const editPassword = (id) => {
-    console.log("editPassword with id", id);
-    setForm({...passwordArray.filter(i => i.id === id)[0], id: id});
+    setForm({ ...passwordArray.find(i => i.id === id), id });
     setPasswordArray(passwordArray.filter(item => item.id !== id));
   };
 
@@ -51,7 +48,6 @@ const Table = ({ passwordArray, setPasswordArray, setForm }) => {
           ) : (
             passwordArray.map((item, index) => (
               <tr key={index} className="transition-all duration-200">
-                {/* Site */}
                 <td className="px-4 py-3 text-white border-t border-gray-700">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-y-1 gap-x-2 break-words">
                     <a
@@ -75,7 +71,6 @@ const Table = ({ passwordArray, setPasswordArray, setForm }) => {
                   </div>
                 </td>
 
-                {/* Username */}
                 <td className="px-4 py-3 text-white border-t border-gray-700">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-y-1 gap-x-2 break-all">
                     {item.username}
@@ -92,10 +87,9 @@ const Table = ({ passwordArray, setPasswordArray, setForm }) => {
                   </div>
                 </td>
 
-                {/* Password */}
                 <td className="px-4 py-3 text-white border-t border-gray-700">
                   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-y-1 gap-x-2 break-all">
-                    {"*".repeat(item.password.length)}
+                    {'*'.repeat(item.password.length)}
                     <div className="flex items-center gap-2">
                       <img
                         src="/copy.png"
@@ -109,7 +103,6 @@ const Table = ({ passwordArray, setPasswordArray, setForm }) => {
                   </div>
                 </td>
 
-                {/* Actions */}
                 <td className="px-4 py-3 text-white border-t border-gray-700 text-center">
                   <div className="flex justify-center items-center gap-6">
                     <span onClick={() => editPassword(item.id)}>

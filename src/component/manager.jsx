@@ -8,7 +8,7 @@ const Manager = () => {
     const [passwordArray, setPasswordArray] = useState([]);
 
     const getPassword = async () => {
-        let req = await fetch('http://localhost:3000/');
+        let req = await fetch('https://password-manager-2793.onrender.com/');
         let password = await req.json();
         console.log(password);
         setPasswordArray(password);
@@ -41,9 +41,8 @@ const Manager = () => {
 
         let id = form.id || uuidv4();
 
-        // If editing an existing password, delete the old entry first
         if (form.id) {
-            await fetch('http://localhost:3000/', {
+            await fetch('https://password-manager-2793.onrender.com/', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: form.id }),
@@ -52,21 +51,18 @@ const Manager = () => {
 
         const newPassword = { ...form, id };
 
-        // Save to backend
-        await fetch('http://localhost:3000/', {
+        await fetch('https://password-manager-2793.onrender.com/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(newPassword),
         });
 
-        // Update UI
         setPasswordArray([...passwordArray.filter(p => p.id !== form.id), newPassword]);
 
         setForm({ site: '', username: '', password: '', id: '' });
 
         console.log('Submitted Form:', form);
     };
-
 
     return (
         <div className="w-full min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black px-4 py-6 sm:px-6 sm:py-10">
